@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Card Hub - Compare Web3 Payment Cards</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #141414;
+            --bg-card: #1a1a1a;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.15);
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --text-tertiary: #6b6b6b;
+            --accent-primary: #6366f1;
+            --accent-success: #22c55e;
+            --accent-warning: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            padding: 2rem 1.5rem;
+            overflow-y: auto;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+
+        .logo {
+            margin-bottom: 2.5rem;
+        }
+
+        .logo-text {
+            font-size: 1.375rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-subtitle {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            margin-top: 0.25rem;
+            font-weight: 500;
+        }
+
+        .filter-section {
+            margin-bottom: 2rem;
+        }
+
+        .filter-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.875rem;
+            display: block;
+        }
+
+        .filter-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.375rem;
+        }
+
+        .filter-chip {
+            padding: 0.625rem 0.875rem;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .filter-chip:hover {
+            border-color: var(--border-hover);
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--text-primary);
+        }
+
+        .filter-chip.active {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: white;
+        }
+
+        .filter-count {
+            font-size: 0.6875rem;
+            opacity: 0.7;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .region-select {
+            width: 100%;
+            padding: 0.625rem 0.875rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            border-radius: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8125rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .region-select:hover {
+            border-color: var(--border-hover);
+        }
+
+        .region-select:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 2.5rem 3rem;
+            max-width: 1600px;
+        }
+
+        header {
+            margin-bottom: 2.5rem;
+        }
+
+        h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        /* Promo Banners */
+        .promo-banners {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
+            margin-bottom: 3rem;
+        }
+
+        .promo-banner {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.75rem;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .promo-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+        }
+
+        .promo-1::before { background: linear-gradient(90deg, #667eea, #764ba2); }
+        .promo-2::before { background: linear-gradient(90deg, #f093fb, #f5576c); }
+        .promo-3::before { background: linear-gradient(90deg, #4facfe, #00f2fe); }
+
+        .promo-banner:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+        }
+
+        .promo-label {
+            font-size: 0.625rem;
+            color: var(--text-tertiary);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.75rem;
+        }
+
+        .promo-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .promo-text {
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 1.25rem;
+        }
+
+        .promo-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .promo-btn:hover {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+
+        /* Category Sections */
+        .category-section {
+            margin-bottom: 3rem;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.875rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .category-icon {
+            font-size: 1.25rem;
+        }
+
+        .category-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+        }
+
+        .category-count {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            font-family: 'Space Mono', monospace;
+        }
+
+        /* Table */
+        .table-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            overflow-x: auto;
+        }
+
+        .card-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .card-table thead {
+            background: var(--bg-secondary);
+        }
+
+        .card-table th {
+            padding: 1rem 1rem;
+            text-align: left;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--border-color);
+            white-space: nowrap;
+        }
+
+        .card-table tbody tr {
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.15s ease;
+        }
+
+        .card-table tbody tr:hover {
+            background: var(--bg-secondary);
+        }
+
+        .card-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .card-table tbody tr.tier-row {
+            background: var(--bg-secondary);
+        }
+
+        .card-table td {
+            padding: 1.25rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        .card-name-cell {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            min-width: 180px;
+        }
+
+        .card-logo {
+            width: 44px;
+            height: 44px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .card-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .card-name {
+            font-weight: 600;
+            font-size: 0.9375rem;
+            margin-bottom: 0.125rem;
+        }
+
+        .card-type {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+        }
+
+        .tier-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0;
+            background: transparent;
+            border: none;
+            font-size: 0.6875rem;
+            font-weight: 500;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-left: 0.5rem;
+            text-decoration: underline;
+            text-decoration-style: dotted;
+            text-underline-offset: 2px;
+        }
+
+        .tier-indicator:hover {
+            color: var(--text-secondary);
+        }
+
+        .tier-indicator svg {
+            width: 8px;
+            height: 8px;
+            transition: transform 0.2s ease;
+            opacity: 0.6;
+        }
+
+        .tier-indicator.expanded {
+            color: var(--text-secondary);
+        }
+
+        .tier-indicator.expanded svg {
+            transform: rotate(180deg);
+        }
+
+        .value-highlight {
+            color: var(--accent-success);
+            font-weight: 600;
+        }
+
+        .value-neutral {
+            color: var(--text-secondary);
+        }
+
+        .rewards-value {
+            position: relative;
+            cursor: help;
+            font-family: 'Space Mono', monospace;
+            font-weight: 600;
+        }
+
+        .rewards-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-hover);
+            border-radius: 8px;
+            padding: 0.875rem 1rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            white-space: normal;
+            max-width: 320px;
+            width: max-content;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            margin-bottom: 0.5rem;
+            z-index: 1000;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            line-height: 1.5;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .rewards-tooltip strong {
+            color: var(--accent-success);
+            font-weight: 600;
+        }
+
+        .rewards-value:hover .rewards-tooltip {
+            opacity: 1;
+        }
+
+        .tier-details {
+            padding: 1rem 1.25rem 1rem 5rem;
+            font-size: 0.8125rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .tier-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .tier-item:last-child {
+            border-bottom: none;
+        }
+
+        .tier-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .tier-stats {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .tier-stat {
+            text-align: right;
+        }
+
+        .tier-stat-label {
+            font-size: 0.6875rem;
+            color: var(--text-tertiary);
+            margin-bottom: 0.25rem;
+        }
+
+        .tier-stat-value {
+            font-weight: 600;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.875rem;
+        }
+
+        .perks-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.375rem;
+        }
+
+        .perk-tag {
+            padding: 0.25rem 0.625rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 0.6875rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        .format-badges {
+            display: flex;
+            gap: 0.375rem;
+            flex-wrap: wrap;
+        }
+
+        .format-badge {
+            padding: 0.25rem 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 0.6875rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        .format-badge.available {
+            background: rgba(34, 197, 94, 0.1);
+            border-color: rgba(34, 197, 94, 0.3);
+            color: var(--accent-success);
+        }
+
+        .btn-apply {
+            padding: 0.5rem 1.25rem;
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.8125rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+            white-space: nowrap;
+        }
+
+        .btn-apply:hover {
+            background: #5558e3;
+            transform: translateY(-1px);
+        }
+
+        .ref-code {
+            display: block;
+            font-size: 0.6875rem;
+            color: var(--text-tertiary);
+            margin-top: 0.375rem;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .promo-notice {
+            font-size: 0.6875rem;
+            color: var(--accent-warning);
+            margin-top: 0.25rem;
+        }
+
+        .logo-gradient-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .logo-gradient-2 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .logo-gradient-3 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .logo-gradient-4 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+        .logo-gradient-5 { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+        .logo-gradient-6 { background: linear-gradient(135deg, #30cfd0 0%, #330867 100%); }
+        .logo-gradient-7 { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
+        .logo-gradient-8 { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); }
+        .logo-gradient-9 { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); }
+        .logo-gradient-10 { background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%); }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                display: none;
+            }
+            .promo-banners {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-text">Crypto Card Hub</div>
+                <div class="logo-subtitle">Web3 Payment Cards</div>
+            </div>
+
+            <div class="filter-section">
+                <label class="filter-label">Features</label>
+                <div class="filter-options" id="featuresFilter">
+                    <button class="filter-chip active" data-feature="all">
+                        <span>All Cards</span>
+                        <span class="filter-count">12</span>
+                    </button>
+                    <button class="filter-chip" data-feature="cashback">
+                        <span>High Rewards (2%+)</span>
+                        <span class="filter-count">10</span>
+                    </button>
+                    <button class="filter-chip" data-feature="virtual">
+                        <span>Virtual Cards</span>
+                        <span class="filter-count">11</span>
+                    </button>
+                    <button class="filter-chip" data-feature="savings">
+                        <span>Savings/Earn</span>
+                        <span class="filter-count">6</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <label class="filter-label">Requirements</label>
+                <div class="filter-options" id="requirementsFilter">
+                    <button class="filter-chip active" data-requirement="all">
+                        <span>All</span>
+                        <span class="filter-count">12</span>
+                    </button>
+                    <button class="filter-chip" data-requirement="free">
+                        <span>No Staking</span>
+                        <span class="filter-count">7</span>
+                    </button>
+                    <button class="filter-chip" data-requirement="staking">
+                        <span>Staking Required</span>
+                        <span class="filter-count">5</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <label class="filter-label">Region</label>
+                <select class="region-select" id="regionSelect">
+                    <option value="all">All Regions</option>
+                    <option value="US">🇺🇸 United States</option>
+                    <option value="EU">🇪🇺 European Union</option>
+                    <option value="APAC">🌏 Asia-Pacific</option>
+                    <option value="CHINA">🇨🇳 China</option>
+                    <option value="ROW">🌍 Rest of World</option>
+                </select>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header>
+                <h1>Compare Web3 Payment Cards</h1>
+                <p class="subtitle">Find the best crypto card for your needs</p>
+            </header>
+
+            <div class="promo-banners">
+                <div class="promo-banner promo-1">
+                    <div class="promo-label">Featured</div>
+                    <div class="promo-title">Ether.fi Cash</div>
+                    <div class="promo-text">2-3% cashback in ETHFI • Earn yield while you spend • Non-custodial</div>
+                    <a href="https://www.ether.fi/refer/4c8d8a1a" target="_blank" class="promo-btn">
+                        Get Card →
+                    </a>
+                </div>
+                <div class="promo-banner promo-2">
+                    <div class="promo-label">Exclusive Deal</div>
+                    <div class="promo-title">Ready Card</div>
+                    <div class="promo-text">Use code <strong>YT-305QFU</strong> for 30% off • Smart wallet • DeFi yields • 0% FX fees</div>
+                    <a href="https://www.ready.co/download-ready" target="_blank" class="promo-btn">
+                        Get Card →
+                    </a>
+                </div>
+                <div class="promo-banner promo-3">
+                    <div class="promo-label">Popular</div>
+                    <div class="promo-title">Kast Card</div>
+                    <div class="promo-text">2-8% Points + 4% MOVE • Standard cards free • Just pay shipping</div>
+                    <a href="https://go.kast.xyz/VqVO/TV59MHSS" target="_blank" class="promo-btn">
+                        Get Card →
+                    </a>
+                </div>
+            </div>
+
+            <div id="categoriesContainer">
+                <!-- Categories will be populated by JavaScript -->
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const cardsData = {
+            "Non-Custodial": [
+                {
+                    name: "Ether.fi Cash",
+                    type: "Visa Signature",
+                    logoClass: "logo-gradient-5",
+                    logoText: "ETH",
+                    hasTiers: true,
+                    tierCount: 3,
+                    tiers: [
+                        { name: "Pinnacle", rewards: "3%", requirement: "250k sETHFI or 50k pts/mo", fxFee: "0%" },
+                        { name: "Luxe", rewards: "3%", requirement: "25k sETHFI or 10k pts/mo", fxFee: "0%" },
+                        { name: "Core", rewards: "2%", requirement: "Free", fxFee: "1%" }
+                    ],
+                    rewards: "2-3%",
+                    rewardsPrereq: "Paid in <strong>ETHFI</strong> • Stake sETHFI or earn points",
+                    rewardToken: "ETHFI",
+                    fxFee: "0-1%",
+                    requirement: "Free - 250k sETHFI",
+                    stakingRequired: true,
+                    features: { cashback: true, virtual: true, savings: true, lounge: false },
+                    perks: ["Liquid staking", "ETH yield"],
+                    regions: ["US", "EU", "APAC", "CHINA", "ROW"],
+                    regionText: "🌍 Global 🇨🇳 China KYC",
+                    refLink: "https://www.ether.fi/refer/4c8d8a1a",
+                    applePay: true,
+                    googlePay: true,
+                    physical: true
+                },
+                {
+                    name: "Gnosis Pay",
+                    type: "Visa Debit",
+                    logoClass: "logo-gradient-3",
+                    logoText: "GNO",
+                    hasTiers: false,
+                    rewards: "0%",
+                    rewardsPrereq: "N/A",
+                    rewardToken: "None",
+                    fxFee: "1.5%",
+                    requirement: "$36 one-time",
+                    stakingRequired: false,
+                    features: { cashback: false, virtual: true, savings: false, lounge: false },
+                    perks: ["Self-custody", "Safe wallet"],
+                    regions: ["EU"],
+                    regionText: "🇪🇺 EU",
+                    refLink: null,
+                    applePay: true,
+                    googlePay: true,
+                    physical: true
+                },
+                {
+                    name: "MetaMask Card",
+                    type: "Debit Card",
+                    logoClass: "logo-gradient-4",
+                    logoText: "MM",
+                    hasTiers: false,
+                    rewards: "0%",
+                    rewardsPrereq: "N/A",
+                    rewardToken: "None",
+                    fxFee: "1%",
+                    requirement: "None",
+                    stakingRequired: false,
+                    features: { cashback: false, virtual: false, savings: false, lounge: false },
+                    perks: ["No custody", "Privacy"],
+                    regions: ["US", "EU"],
+                    regionText: "🇺🇸 US & 🇪🇺 EU",
+                    refLink: null,
+                    applePay: true,
+                    googlePay: true,
+                    physical: true
+                }
+            ],
+            "Custodial": [
+                {
+                    name: "Kast",
+                    type: "Debit Card",
+                    logoClass: "logo-gradient-6",
+                    logoText: "KST",
+                    hasTiers: false,
+                    rewards: "2-8% + 4% MOVE",
+                    rewardsPrereq: "2-8% in <strong>KAST Points</strong> (Season 5) + 4% in <strong>$MOVE tokens</strong> (limited time)",
+                    rewardToken: "KAST Points + MOVE",
+                    fxFee: "2%",
+                    requirement: "$40 shipping",
+                    stakingRequired: false,
+                    features: { cashback: true, virtual: true, savings: true, lounge: false },
+                    perks: ["Stablecoin", "Free card", "SOL staking"],
+                    regions: ["EU", "ROW"],
+                    regionText: "🌍 160+ countries",
+                    refLink: "https://go.kast.xyz/VqVO/TV59MHSS",
+                    applePay: true,
+                    googlePay: true,
+                    physical: true
+                },
+                {
+                    name: "Tuyo",
+                    type: "Visa Card",
+                    logoClass: "logo-gradient-7",
+                    logoText: "TYO",
+                    hasTiers: false,
+                    rewards: "1%",
+                    rewardsPrereq: "Paid in <strong>crypto</strong> • Standard rewards",
+                    rewardToken: "Crypto",
+                    fxFee: "0%",
+                    requirement: "None",
+                    stakingRequired: false,
+                    features: { cashback: true, virtual: true, savings: false, lounge: false },
+                    perks: ["Simple setup", "No fees"],
+                    regions: ["US"],
+                    regionText: "🇺🇸 US",
+                    refLink: "https://get.tuyo.com/code/3U43E6",
+                    applePay: true,
+                    googlePay: true,
+                    physical: false
+                },
+                {
+                    name: "RedotPay",
+                    type: "Visa Prepaid",
+                    logoClass: "logo-gradient-8",
+                    logoText: "RDP",
+                    hasTiers: false,
+                    rewards: "1%",
+                    rewardsPrereq: "Paid in <strong>crypto</strong> • Multiple tokens",
+                    rewardToken: "Multiple",
+                    fxFee: "1%",
+                    requirement: "None",
+                    stakingRequired: false,
+                    features: { cashback: true, virtual: true, savings: false, lounge: false },
+                    perks: ["Multi-currency", "Global"],
+                    regions: ["APAC", "EU", "ROW"],
+                    regionText: "🌏 180+ countries",
+                    refLink: "https://url.hk/i/en/bn4xa",
+                    applePay: true,
+                    googlePay: true,
+                    physical: true
+                },
+                {
+                    name: "Coinbase Card",
+                    type: "Visa Debit",
+                    logo: "https://www.coinbase.com/favicon.ico",
+                    logoClass: "logo-gradient-9",
+                    logoText: "CB",
+                    hasTiers: false,
+                    rewards: "1-4%",
+                    rewardsPrereq: "Paid in <strong>XLM/GRT/BTC/ETH</strong> • Choose your crypto",
+                    rewardToken: "XLM/GRT/BTC/ETH",
+                    fxFee: "0%",
+                    requirement: "None",
+                    stakingRequired: false,
+                    features: { cashback: true, virtual: false, savings: true, lounge: false },
+                    perks: ["USDC rewards", "Instant"],
+                    regions: ["US", "EU"],
+                    regionText: "🇺🇸 US & 🇪🇺 EU",
+                    refLink: "https://coinbase.com/join/RAM2QHK",
+                    applePay: true,
+                    googlePay: true,
+                    physical: true
+                },
+                {
+                    name: "Ready (Argent)",
+                    type: "Prepaid",
+                    logoClass: "logo-gradient-10",
+                    logoText: "RDY",
+                    hasTiers: false,
+                    rewards: "1-3%",
+                    rewardsPrereq: "Lite: 1% • Metal: 3% (requires $120/yr subscription)",
+                    rewardToken: "Crypto",
+                    fxFee: "0%",
+                    requirement: "$120/yr",
+                    stakingRequired: false,
+                    features: { cashback: true, virtual: true, savings: true, lounge: false },
+                    perks: ["Smart wallet", "DeFi yield"],
+                    regions: ["EU", "CHINA"],
+                    regionText: "🇪🇺 EU 🇨🇳 China KYC",
+                    refCode: "YT-305QFU",
+                    promoText: "30% off",
+                    refLink: "https://www.ready.co/download-ready",
+                    applePay: true,
+                    googlePay: true,
+                    physical: true
+                }
+            ],
+            "CEX Cards": [
+                {
+                    name: "Crypto.com Visa",
+                    type: "Visa Debit",
+                    logo: "https://crypto.com/favicon.ico",
+                    logoClass: "logo-gradient-1",
+                    logoText: "CDC",
+                    hasTiers: true,
+                    tierCount: 5,
+                    tiers: [
+                        { name: "Obsidian", rewards: "8%", requirement: "$400k CRO", fxFee: "0%" },
+                        { name: "Icy/Rose", rewards: "5%", requirement: "$40k CRO", fxFee: "0%" },
+                        { name: "Royal/Jade", rewards: "3%", requirement: "$4k CRO", fxFee: "0%" },
+                        { name: "Ruby Steel", rewards: "2%", requirement: "$400 CRO", fxFee: "0%" },
+                        { name: "Midnight", rewards: "1%", requirement: "Free", fxFee: "0%" }
+                    ],
+                    rewards: "1-8%",
+                    rewardsPrereq: "Paid in <strong>CRO</strong> • 5 tiers from free to $400k stake",
+                    rewardToken: "CRO",
+                    fxFee: "0%",
+                    requirement: "Free - $400k CRO",
+                    stakingRequired: true,
+                    features: { cashback: true, virtual: true, savings: true, lounge: true },
+                    perks: ["Lounge", "Netflix", "Spotify"],
+                    regions: ["US", "EU", "APAC", "ROW"],
+                    regionText: "🌍 Global",
+                    refLink: null,
+                    applePay: true,
+                    googlePay: true,
+                    physical: true
+                },
+                {
+                    name: "Bitget Wallet Card",
+                    type: "Mastercard/Visa",
+                    logoClass: "logo-gradient-2",
+                    logoText: "BGT",
+                    hasTiers: false,
+                    rewards: "5% (first 3mo)",
+                    rewardsPrereq: "Paid in <strong>BGB</strong> • 5% cashback for first 3 months only, then 0%",
+                    rewardToken: "BGB",
+                    fxFee: "1.7%",
+                    requirement: "None",
+                    stakingRequired: false,
+                    features: { cashback: true, virtual: true, savings: true, lounge: false },
+                    perks: ["$5 signup", "8% APY", "Low fees"],
+                    regions: ["EU", "APAC", "CHINA", "ROW"],
+                    regionText: "🇪🇺 EU, 🌏 APAC, LatAm 🇨🇳 China KYC",
+                    refLink: "https://web3.bitget.com/share/36SIne?inviteCode=4yYmVe",
+                    applePay: true,
+                    googlePay: true,
+                    physical: true
+                }
+            ]
+        };
+
+        let activeFeature = 'all';
+        let activeRequirement = 'all';
+        let activeRegion = 'all';
+        let expandedCards = new Set();
+
+        function toggleTiers(cardName) {
+            if (expandedCards.has(cardName)) {
+                expandedCards.delete(cardName);
+            } else {
+                expandedCards.add(cardName);
+            }
+            renderCards();
+        }
+
+        function renderCards() {
+            const container = document.getElementById('categoriesContainer');
+            container.innerHTML = '';
+
+            Object.entries(cardsData).forEach(([category, cards]) => {
+                let filteredCards = cards;
+
+                if (activeFeature !== 'all') {
+                    filteredCards = filteredCards.filter(card => {
+                        if (activeFeature === 'cashback') return parseFloat(card.rewards.split('-')[0].replace('%', '').replace(/[^\d.-]/g, '')) >= 2 || card.rewards.includes('MOVE');
+                        if (activeFeature === 'virtual') return card.features.virtual;
+                        if (activeFeature === 'savings') return card.features.savings;
+                        return true;
+                    });
+                }
+
+                if (activeRequirement !== 'all') {
+                    filteredCards = filteredCards.filter(card => {
+                        if (activeRequirement === 'free') return !card.stakingRequired;
+                        if (activeRequirement === 'staking') return card.stakingRequired;
+                        return true;
+                    });
+                }
+
+                if (activeRegion !== 'all') {
+                    filteredCards = filteredCards.filter(card => card.regions.includes(activeRegion));
+                }
+
+                if (filteredCards.length === 0) return;
+
+                const section = document.createElement('div');
+                section.className = 'category-section';
+                section.innerHTML = `
+                    <div class="category-header">
+                        <span class="category-icon">${category === 'CEX Cards' ? '🏦' : category === 'Non-Custodial' ? '🔐' : '💳'}</span>
+                        <div>
+                            <span class="category-title">${category}</span>
+                            <span class="category-count">${filteredCards.length}</span>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="card-table">
+                            <thead>
+                                <tr>
+                                    <th>Card</th>
+                                    <th>Rewards</th>
+                                    <th>Requirement</th>
+                                    <th>FX Fee</th>
+                                    <th>Available</th>
+                                    <th>Features</th>
+                                    <th>Region</th>
+                                    <th>Apply</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-${category.replace(/\s/g, '-')}"></tbody>
+                        </table>
+                    </div>
+                `;
+                container.appendChild(section);
+
+                const tbody = document.getElementById(`tbody-${category.replace(/\s/g, '-')}`);
+                filteredCards.forEach((card) => {
+                    const row = document.createElement('tr');
+                    const isExpanded = expandedCards.has(card.name);
+
+                    row.innerHTML = `
+                        <td>
+                            <div class="card-name-cell">
+                                <div class="card-logo ${card.logoClass}">
+                                    ${card.logo ? `<img src="${card.logo}" alt="${card.name}">` : card.logoText}
+                                </div>
+                                <div>
+                                    <div class="card-name">${card.name}</div>
+                                    <div class="card-type">
+                                        ${card.type}
+                                        ${card.hasTiers ? `<span class="tier-indicator ${isExpanded ? 'expanded' : ''}" onclick="toggleTiers('${card.name}')">${card.tierCount} tiers <svg viewBox="0 0 12 12" fill="currentColor"><path d="M2 4l4 4 4-4"/></svg></span>` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="rewards-value ${parseFloat(card.rewards.split('-')[0].replace('%', '').replace(/[^\d.-]/g, '')) > 0 || card.rewards.includes('MOVE') ? 'value-highlight' : 'value-neutral'}">
+                                ${card.rewards}
+                                <div class="rewards-tooltip">${card.rewardsPrereq}</div>
+                            </div>
+                        </td>
+                        <td style="font-size: 0.8125rem;">${card.requirement}</td>
+                        <td style="font-family: 'Space Mono', monospace; font-weight: 600; color: ${card.fxFee === '0%' || card.fxFee === '0-1%' ? 'var(--accent-success)' : 'var(--text-secondary)'};">${card.fxFee}</td>
+                        <td>
+                            <div class="format-badges">
+                                <span class="format-badge ${card.applePay ? 'available' : ''}">Apple Pay</span>
+                                <span class="format-badge ${card.googlePay ? 'available' : ''}">G Pay</span>
+                                ${card.physical ? '<span class="format-badge available">Physical</span>' : ''}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="perks-list">
+                                ${card.perks.map(p => `<span class="perk-tag">${p}</span>`).join('')}
+                            </div>
+                        </td>
+                        <td style="font-size: 0.8125rem;">${card.regionText}</td>
+                        <td>
+                            ${card.refLink && card.refCode ? `<a href="${card.refLink}" target="_blank" class="btn-apply">Get Card</a><span class="ref-code">Code: ${card.refCode}</span>${card.promoText ? `<div class="promo-notice">${card.promoText}</div>` : ''}` :
+                              card.refLink ? `<a href="${card.refLink}" target="_blank" class="btn-apply">Get Card</a>` : 
+                              card.refCode ? `<button class="btn-apply" disabled>Get Card</button><span class="ref-code">Code: ${card.refCode}</span>${card.promoText ? `<div class="promo-notice">${card.promoText}</div>` : ''}` : 
+                              `<button class="btn-apply">Get Card</button>`}
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+
+                    if (card.hasTiers && isExpanded) {
+                        const tierRow = document.createElement('tr');
+                        tierRow.className = 'tier-row';
+                        tierRow.innerHTML = `
+                            <td colspan="8">
+                                <div class="tier-details">
+                                    ${card.tiers.map(tier => `
+                                        <div class="tier-item">
+                                            <div class="tier-name">${tier.name}</div>
+                                            <div class="tier-stats">
+                                                <div class="tier-stat">
+                                                    <div class="tier-stat-label">Rewards</div>
+                                                    <div class="tier-stat-value" style="color: var(--accent-success);">${tier.rewards}</div>
+                                                </div>
+                                                <div class="tier-stat">
+                                                    <div class="tier-stat-label">Requirement</div>
+                                                    <div class="tier-stat-value">${tier.requirement}</div>
+                                                </div>
+                                                <div class="tier-stat">
+                                                    <div class="tier-stat-label">FX Fee</div>
+                                                    <div class="tier-stat-value" style="color: ${tier.fxFee === '0%' ? 'var(--accent-success)' : 'var(--text-secondary)'};">${tier.fxFee}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </td>
+                        `;
+                        tbody.appendChild(tierRow);
+                    }
+                });
+            });
+        }
+
+        document.querySelectorAll('#featuresFilter .filter-chip').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('#featuresFilter .filter-chip').forEach(b => b.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+                activeFeature = e.currentTarget.dataset.feature;
+                renderCards();
+            });
+        });
+
+        document.querySelectorAll('#requirementsFilter .filter-chip').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('#requirementsFilter .filter-chip').forEach(b => b.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+                activeRequirement = e.currentTarget.dataset.requirement;
+                renderCards();
+            });
+        });
+
+        document.getElementById('regionSelect').addEventListener('change', (e) => {
+            activeRegion = e.target.value;
+            renderCards();
+        });
+
+        renderCards();
+    </script>
+</body>
+</html>
